@@ -1,4 +1,4 @@
-# task_note
+# TaskNote
 TaskNote combines tasks from a to-do list with notes from a note-taking app, allowing users to add detailed notes for each task while managing their to-do items efficiently.
 
 ## Development Overview
