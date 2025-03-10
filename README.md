@@ -12,6 +12,9 @@ Currently, the app includes essential features such as:
 - Searching for tasks
 - Editing task notes: Users can edit the notes associated with tasks, allowing them to update the details or add more information as needed.
 
+## Screenshot
+![Alt text](./Screenshot/ภาพถ่ายหน้าจอ%202568-03-11%20เวลา%202.21.53%20AM.png)
+![Alt text](./Screenshot/ภาพถ่ายหน้าจอ%202568-03-11%20เวลา%202.21.38%20AM.png)
 
 ## Getting Started
 

@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         ),
+        debugShowCheckedModeBanner: false, 
         home: MyHomePage(),
       ),
     );
@@ -106,10 +107,39 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            Container(
+              height: 150.0,
               decoration: BoxDecoration(color: Colors.cyan[200]),
-              child: Text('Categories',
-                  style: TextStyle(color: Colors.black, fontSize: 24)),
+              child: Center(
+                child: Text(
+                  'Categories',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
+            Consumer<MyAppState>(
+              builder: (context, appState, child) {
+                var tags =
+                    appState.tasks.map((task) => task.tag).toSet().toList();
+                tags.insert(0, 'All');
+
+                return Column(
+                  children: tags.map((tag) {
+                    return ListTile(
+                      title: Text(tag),
+                      onTap: () {
+                        setState(() {
+                          searchQuery = tag == 'All' ? '' : tag;
+                        });
+                        Navigator.pop(context);
+                      },
+                    );
+                  }).toList(),
+                );
+              },
             ),
           ],
         ),
@@ -139,20 +169,43 @@ class _MyHomePageState extends State<MyHomePage> {
                               .contains(searchQuery.toLowerCase()))
                       .toList(); // 🔍 Filter tasks
 
-                  return ListView.builder(
-                    itemCount: filteredTasks.length,
-                    itemBuilder: (context, index) {
-                      return TaskCard(
-                        task: filteredTasks[index],
-                        onDelete: () {
-                          appState.deleteTask(index);
-                        },
-                        onToggleComplete: (isCompleted) {
-                          appState.toggleTaskCompletion(index, isCompleted);
-                        },
-                      );
-                    },
-                  );
+                  return filteredTasks.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment
+                                .center, // Aligns children vertically in the center
+                            crossAxisAlignment: CrossAxisAlignment
+                                .center, // Aligns children horizontally in the center
+                            children: [
+                              Icon(
+                                Icons.app_registration_outlined,
+                                size: 150,
+                              ),
+                              SizedBox(
+                                  height:
+                                      10), // Adds space between the icon and the text
+                              Text(
+                                'No tasks found.',
+                                style: TextStyle(fontSize: 24),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: filteredTasks.length,
+                          itemBuilder: (context, index) {
+                            return TaskCard(
+                              task: filteredTasks[index],
+                              onDelete: () {
+                                appState.deleteTask(index);
+                              },
+                              onToggleComplete: (isCompleted) {
+                                appState.toggleTaskCompletion(
+                                    index, isCompleted);
+                              },
+                            );
+                          },
+                        );
                 },
               ),
             ),
