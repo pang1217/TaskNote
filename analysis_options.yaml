@@ -1,0 +1,8 @@
+analyzer:
+  enable-experiment:
+    - super-parameters
+
+linter:
+  rules:
+    - prefer_single_quotes
+    - avoid_print

@@ -1,0 +1,23 @@
+name: task_note
+description: A simple To-Do List app with Notes and Categories using Hive.
+publish_to: 'none' # This prevents accidental publishing to pub.dev.
+
+version: 1.0.0+1
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  provider: ^6.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  hive_generator: ^2.0.1
+  build_runner: ^2.3.3
+
+flutter:
+  uses-material-design: true
