@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../models/task.dart';
+import 'package:provider/provider.dart';
+import '../main.dart'; 
 
 class TaskCard extends StatelessWidget {
   final Task task;
@@ -63,6 +65,7 @@ class TaskCard extends StatelessWidget {
             ],
             iconColor: Colors.black),
         trailing: PopupMenuButton<String>(
+          color: Colors.white,
           icon: Icon(Icons.more_horiz, color: Colors.black),
           onSelected: (String value) {
             if (value == 'delete') {
@@ -132,11 +135,11 @@ class TaskCard extends StatelessWidget {
               onPressed: () {
                 if (titleController.text.isNotEmpty &&
                     noteController.text.isNotEmpty) {
-                  // context.read<MyAppState>().editTask(
-                  //       task,
-                  //       titleController.text,
-                  //       noteController.text,
-                  //     );
+                  context.read<MyAppState>().editTask(
+                        task,
+                        titleController.text,
+                        noteController.text,
+                      );
                   Navigator.pop(context);
                 }
               },

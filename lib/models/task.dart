@@ -43,4 +43,20 @@ class Task {
       tag: map['tag'] ?? '',
     );
   }
+
+  // Override == and hashCode to compare tasks based on their content
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Task &&
+        other.title == title &&
+        other.note == note &&
+        other.tag == tag &&
+        other.isCompleted == isCompleted;
+  }
+
+  @override
+  int get hashCode {
+    return title.hashCode ^ note.hashCode ^ tag.hashCode ^ isCompleted.hashCode;
+  }
 }

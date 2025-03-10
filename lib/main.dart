@@ -56,12 +56,18 @@ class MyAppState extends ChangeNotifier {
   }
 
   void toggleTaskCompletion(int index, bool isCompleted) {
-  tasks[index].isCompleted = isCompleted;
-  notifyListeners();
+    tasks[index].isCompleted = isCompleted;
+    notifyListeners();
   }
-  
+
   void editTask(Task task, String newTitle, String newNote) {
-    int index = _taskBox.values.toList().indexOf(task);
+    print('Editing task: ${task.title}, ${task.note}');
+    print(newNote);
+    var taskListFromHive = _taskBox.values.toList().map((taskMap) {
+      return Task.fromMap(Map<String, dynamic>.from(taskMap));
+    }).toList();
+    int index = taskListFromHive.indexOf(task);
+    print(index);
     if (index != -1) {
       Task updatedTask = Task(
         title: newTitle,
@@ -69,8 +75,10 @@ class MyAppState extends ChangeNotifier {
         tag: task.tag,
         isCompleted: task.isCompleted,
       );
-      _taskBox.putAt(index, updatedTask.toMap());
-      fetchTasks(); // Refresh UI
+      print('Task updated');
+      _taskBox.putAt(index, updatedTask.toMap()); // Update Hive
+      taskList[index] = updatedTask; // Ensure taskList is updated
+      notifyListeners();
     }
   }
 }
@@ -120,9 +128,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 builder: (context, appState, child) {
                   var filteredTasks = appState.tasks
                       .where((task) =>
-                          task.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
-                          task.note.toLowerCase().contains(searchQuery.toLowerCase()) ||
-                          task.tag.toLowerCase().contains(searchQuery.toLowerCase()))
+                          task.title
+                              .toLowerCase()
+                              .contains(searchQuery.toLowerCase()) ||
+                          task.note
+                              .toLowerCase()
+                              .contains(searchQuery.toLowerCase()) ||
+                          task.tag
+                              .toLowerCase()
+                              .contains(searchQuery.toLowerCase()))
                       .toList(); // 🔍 Filter tasks
 
                   return ListView.builder(
@@ -151,8 +165,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ),
     );
-  
-    
   }
 
   void _showAddTaskDialog(BuildContext context) {
@@ -175,20 +187,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   controller: titleController,
                   decoration: InputDecoration(labelText: 'Task Title')),
               TextField(
-                style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black),
                   minLines: 1,
                   maxLines: 5,
                   controller: noteController,
-                  decoration: InputDecoration(labelText: 'Task Note',)),
+                  decoration: InputDecoration(
+                    labelText: 'Task Note',
+                  )),
               TextField(
-                style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black),
                   controller: tagController,
                   decoration: InputDecoration(labelText: 'Task Tag')),
             ],
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(context), child: Text('Cancel', style: TextStyle(color: Colors.black))),
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel', style: TextStyle(color: Colors.black))),
             TextButton(
               onPressed: () {
                 if (titleController.text.isNotEmpty &&
@@ -201,7 +216,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.pop(context);
                 }
               },
-              child: Text('Add Task', style: TextStyle(color: Colors.black),),
+              child: Text(
+                'Add Task',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
